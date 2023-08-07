@@ -1,0 +1,54 @@
+version: 2.1
+orbs:
+  node: circleci/node@5.1.0
+jobs:
+  lint:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          command: npm run lint
+          name: Run Lint
+  unit-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          command: npm run test
+          name: Run Unit Tests
+  code-coverage:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          command: npm run test:cov
+          name: Run Code Coverage
+  dependency_audit:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          command: npm audit --json
+          name: Run Dependency Audit
+
+workflows:
+  ci:
+    jobs:
+      - dependency_audit      
+      - lint:
+          requires:
+            - dependency_audit      
+      - unit-test:
+          requires:
+            - lint
+      - code-coverage:
+          requires:
+            - unit-test
