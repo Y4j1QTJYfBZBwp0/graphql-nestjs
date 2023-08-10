@@ -38,6 +38,15 @@ jobs:
       - run:
           command: npm audit --json
           name: Run Dependency Audit
+  e2e-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          command: npm run test:e2e
+          name: Run E2E Tests          
 
 workflows:
   ci:
@@ -52,3 +61,6 @@ workflows:
       - code-coverage:
           requires:
             - unit-test
+      - e2e-test
+          requires:
+            - code-coverage
