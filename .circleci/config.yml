@@ -61,6 +61,6 @@ workflows:
       - code-coverage:
           requires:
             - unit-test
-      - e2e-test
+      - e2e-test:
           requires:
             - code-coverage
